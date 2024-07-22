@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold;
 
-use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 
 class FilamentScaffoldPlugin implements Plugin
 {
@@ -16,7 +16,7 @@ class FilamentScaffoldPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->resources([
-            DcatformResource::class
+            DcatformResource::class,
         ]);
     }
 

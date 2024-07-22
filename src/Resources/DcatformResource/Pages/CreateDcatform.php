@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\DcatformResource\Pages;
 
-use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 use Filament\Resources\Pages\CreateRecord;
 use Solutionforest\FilamentScaffold\Models\Dcatform;
+use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 
 class CreateDcatform extends CreateRecord
 {

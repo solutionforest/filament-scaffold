@@ -13,6 +13,7 @@ class Dcatform extends Model
     public static function getAllTableNames()
     {
         $tables = DB::select('SHOW TABLES');
+
         return array_map('current', $tables);
     }
 }
