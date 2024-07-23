@@ -101,8 +101,8 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('filament-scaffold', __DIR__ . '/../resources/dist/components/filament-scaffold.js'),
-            Css::make('filament-scaffold-styles', __DIR__ . '/../resources/dist/filament-scaffold.css'),
-            Js::make('filament-scaffold-scripts', __DIR__ . '/../resources/dist/filament-scaffold.js'),
+            // Css::make('filament-scaffold-styles', __DIR__ . '/../resources/dist/filament-scaffold.css'),
+            // Js::make('filament-scaffold-scripts', __DIR__ . '/../resources/dist/filament-scaffold.js'),
         ];
     }
 
