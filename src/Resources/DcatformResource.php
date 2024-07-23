@@ -69,6 +69,7 @@ class DcatformResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Field Name')
+                            ->required()
                             ->default(fn ($record) => $record['name'] ?? ''),
                         Forms\Components\TextInput::make('translation'),
                         Forms\Components\Select::make('type')
