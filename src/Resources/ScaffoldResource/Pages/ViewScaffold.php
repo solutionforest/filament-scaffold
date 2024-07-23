@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class ViewScaffold extends ViewRecord
 {

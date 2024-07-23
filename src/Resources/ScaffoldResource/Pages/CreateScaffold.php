@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Resources\Pages\CreateRecord;
 use Solutionforest\FilamentScaffold\Models\Scaffold;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class CreateScaffold extends CreateRecord
 {
