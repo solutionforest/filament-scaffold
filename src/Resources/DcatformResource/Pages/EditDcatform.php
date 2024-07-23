@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\DcatformResource\Pages;
 
-use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 
 class EditDcatform extends EditRecord
 {

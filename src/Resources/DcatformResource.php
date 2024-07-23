@@ -2,14 +2,13 @@
 
 namespace Solutionforest\FilamentScaffold\Resources;
 
-use Solutionforest\FilamentScaffold\Resources\DcatformResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Solutionforest\FilamentScaffold\Resources\DcatformResource\Pages;
 
 class DcatformResource extends Resource
 {
@@ -132,10 +131,11 @@ class DcatformResource extends Resource
                 // ])->columnSpanFull(),
             ]);
     }
-    
+
     public static function getAllTableNames(): array
     {
         $tables = DB::select('SHOW TABLES');
+
         return array_map('current', $tables);
     }
 
@@ -158,7 +158,7 @@ class DcatformResource extends Resource
                 'nullable' => $column->Null === 'YES',
                 'key' => $column->Key,
                 'default' => $column->Default,
-                'comment' => '', 
+                'comment' => '',
             ];
         }
 
@@ -186,24 +186,25 @@ class DcatformResource extends Resource
         $resourceParts = explode('\\', $resource);
         $resourcelName = end($resourceParts);
 
-        $resourceCommand = "php artisan make:filament-resource " . ucfirst($resourcelName). " --generate --view";
-        $modelCommand = "php artisan make:model " . ucfirst($modelName);
-        $modelWithMigrationCommand = $modelCommand . " -m";
-        $modelWithFactoryCommand = $modelCommand . " -f";
-        $modelWithMigrationNFactoryCommand = $modelCommand . " -m -f";
-        $controllerCommand = "php artisan make:controller " . ucfirst($data['Table Name']) . "Controller";
-            
+        $resourceCommand = 'php artisan make:filament-resource ' . ucfirst($resourcelName) . ' --generate --view';
+        $modelCommand = 'php artisan make:model ' . ucfirst($modelName);
+        $modelWithMigrationCommand = $modelCommand . ' -m';
+        $modelWithFactoryCommand = $modelCommand . ' -f';
+        $modelWithMigrationNFactoryCommand = $modelCommand . ' -m -f';
+        $controllerCommand = 'php artisan make:controller ' . ucfirst($data['Table Name']) . 'Controller';
+
         chdir($basePath);
         $migrationPath = null;
         $resourcePath = null;
-    
+
         if ($data['Create Resource']) {
             exec($resourceCommand, $output, $return_var);
             foreach ($output as $line) {
                 if (strpos($line, 'Resource') !== false) {
                     preg_match('/\[([^\]]+)\]/', $line, $matches);
                     $resourcePath = $matches[1] ?? null;
-                    break; 
+
+                    break;
                 }
             }
         }
@@ -214,7 +215,8 @@ class DcatformResource extends Resource
                 if (strpos($line, 'Migration') !== false) {
                     preg_match('/\[([^\]]+)\]/', $line, $matches);
                     $migrationPath = $matches[1] ?? null;
-                    break; 
+
+                    break;
                 }
             }
         } elseif ($data['Create Model'] && $data['Create Migration']) {
@@ -224,7 +226,8 @@ class DcatformResource extends Resource
                 if (strpos($line, 'Migration') !== false) {
                     preg_match('/\[([^\]]+)\]/', $line, $matches);
                     $migrationPath = $matches[1] ?? null;
-                    break; 
+
+                    break;
                 }
             }
         } elseif ($data['Create Model'] && $data['Create Factory']) {
@@ -232,24 +235,24 @@ class DcatformResource extends Resource
         } elseif ($data['Create Model']) {
             exec($modelCommand . ' 2>&1', $output, $return_var);
         }
-    
+
         if ($data['Create Controller']) {
             exec($controllerCommand . ' 2>&1', $output, $return_var);
         }
-        Log::info('migration path is'. $migrationPath);
+        Log::info('migration path is' . $migrationPath);
         self::overwriteResourceFile($resourcePath, $data);
         self::overwriteMigrationFile($migrationPath, $data);
-    }    
+    }
 
     public static function overwriteResourceFile($resourceFile, $data)
     {
         $model = preg_replace('/\(.+\)/', '', $data['Model']);
         $modelParts = explode('\\', $model);
         $modelName = end($modelParts);
-        
+
         if (file_exists($resourceFile)) {
             $content = file_get_contents($resourceFile);
-            
+
             $formSchema = self::generateFormSchema($data);
             $tableSchema = self::generateTableSchema($data);
             $useClassChange = <<<EOD
@@ -303,7 +306,8 @@ class DcatformResource extends Resource
         foreach ($data['Table'] as $column) {
             $fields[] = "Forms\Components\TextInput::make('{$column['name']}')->required()";
         }
-        return "[" . implode(",\n", $fields) . "]";
+
+        return '[' . implode(",\n", $fields) . ']';
     }
 
     public static function generateTableSchema($data)
@@ -312,7 +316,8 @@ class DcatformResource extends Resource
         foreach ($data['Table'] as $column) {
             $columns[] = "Tables\Columns\TextColumn::make('{$column['name']}')->sortable()->searchable()";
         }
-        return "[" . implode(",\n", $columns) . "]";
+
+        return '[' . implode(",\n", $columns) . ']';
     }
 
     public static function overwriteMigrationFile($filePath, $data)
@@ -349,41 +354,42 @@ class DcatformResource extends Resource
     {
         $fields = [];
         foreach ($data['Table'] as $column) {
-            if($column['nullable']==true && $column['default']!=null && $column['comment']!=null && $column['key']!=null) {
+            if ($column['nullable'] == true && $column['default'] != null && $column['comment'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->default('{$column['default']}')->comment('{$column['comment']}')->{$column['key']}()";
-            } elseif($column['nullable']==true && $column['default']!=null && $column['comment']!=null) {
+            } elseif ($column['nullable'] == true && $column['default'] != null && $column['comment'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->default('{$column['default']}')->comment('{$column['comment']}')";
-            } elseif($column['nullable']==true && $column['default']!=null && $column['key']!=null) {
+            } elseif ($column['nullable'] == true && $column['default'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->default('{$column['default']}')->{$column['key']}()";
-            } elseif($column['nullable']==true && $column['comment']!=null && $column['key']!=null) {
+            } elseif ($column['nullable'] == true && $column['comment'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->comment('{$column['comment']}')->{$column['key']}()";
-            } elseif($column['default']!=null && $column['comment']!=null && $column['key']!=null) {
+            } elseif ($column['default'] != null && $column['comment'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->default('{$column['default']}')->comment('{$column['comment']}')->{$column['key']}()";
-            } elseif($column['nullable']==true && $column['default']!=null) {
+            } elseif ($column['nullable'] == true && $column['default'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->default('{$column['default']}')";
-            } elseif($column['nullable']==true && $column['comment']!=null) {
+            } elseif ($column['nullable'] == true && $column['comment'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->comment('{$column['comment']}')";
-            } elseif($column['nullable']==true && $column['key']!=null) {
+            } elseif ($column['nullable'] == true && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()->{$column['key']}()";
-            } elseif($column['comment']!=null && $column['key']!=null) {
+            } elseif ($column['comment'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->comment('{$column['comment']}')->{$column['key']}()";
-            } elseif($column['default']!=null && $column['key']!=null) {
+            } elseif ($column['default'] != null && $column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->default('{$column['default']}')->{$column['key']}()";
-            } elseif($column['default']!=null && $column['comment']!=null) {
+            } elseif ($column['default'] != null && $column['comment'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->default('{$column['default']}')->comment('{$column['comment']}')";
-            } elseif($column['nullable']==true) {
+            } elseif ($column['nullable'] == true) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->nullable()";
-            } elseif($column['default']!=null) {
+            } elseif ($column['default'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->default('{$column['default']}')";
-            } elseif($column['comment']!=null) {
+            } elseif ($column['comment'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->comment('{$column['comment']}')";
-            } elseif($column['key']!=null) {
+            } elseif ($column['key'] != null) {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')->{$column['key']}()";
             } else {
                 $fields[] = "\$table->{$column['type']}('{$column['name']}')";
             }
-            
+
         }
+
         return implode(";\n", $fields);
     }
 }
