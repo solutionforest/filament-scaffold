@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class ListScaffolds extends ListRecords
 {

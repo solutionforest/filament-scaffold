@@ -2,9 +2,9 @@
 
 namespace Solutionforest\FilamentScaffold;
 
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 
 class FilamentScaffoldPlugin implements Plugin
 {
@@ -16,7 +16,7 @@ class FilamentScaffoldPlugin implements Plugin
     public function register(Panel $panel): void
     {
         $panel->resources([
-            ScaffoldResource::class
+            ScaffoldResource::class,
         ]);
     }
 
