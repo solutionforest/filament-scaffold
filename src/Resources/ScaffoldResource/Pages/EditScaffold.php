@@ -1,14 +1,14 @@
 <?php
 
-namespace Solutionforest\FilamentScaffold\Resources\DcatformResource\Pages;
+namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Solutionforest\FilamentScaffold\Resources\DcatformResource;
 
-class EditDcatform extends EditRecord
+class EditScaffold extends EditRecord
 {
-    protected static string $resource = DcatformResource::class;
+    protected static string $resource = ScaffoldResource::class;
 
     protected function getHeaderActions(): array
     {
