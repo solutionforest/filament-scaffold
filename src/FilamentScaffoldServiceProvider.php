@@ -5,9 +5,9 @@ namespace Solutionforest\FilamentScaffold;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Facades\FilamentAsset;
 use Livewire\Features\SupportTesting\Testable;
+use Solutionforest\FilamentScaffold\Testing\TestsFilamentScaffold;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Solutionforest\FilamentScaffold\Testing\TestsFilamentScaffold;
 
 class FilamentScaffoldServiceProvider extends PackageServiceProvider
 {
@@ -31,7 +31,7 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
         );
 
         // Testing
-        Testable::mixin(new TestsFilamentScaffold());
+        Testable::mixin(new TestsFilamentScaffold);
     }
 
     protected function getAssetPackageName(): ?string
