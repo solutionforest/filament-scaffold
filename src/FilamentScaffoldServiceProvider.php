@@ -38,4 +38,13 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
     {
         return 'solution-forest/filament-scaffold';
     }
+
+    /**
+     * @return array<Asset>
+     */
+    protected function getAssets(): array
+    {
+        return [
+        ];
+    }
 }
