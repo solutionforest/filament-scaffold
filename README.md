@@ -27,6 +27,8 @@ Then, you need to connect to the database in the .env file.
 
 In your preject, app\Providers\Filament\xxxPanelProvider.php add this code:
 ```bash
+use Solutionforest\FilamentScaffold\FilamentScaffoldPlugin;
+
 public function panel(Panel $panel): Panel
     {
         return $panel
