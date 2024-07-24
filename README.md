@@ -20,20 +20,6 @@ You can install the package via composer:
 composer require solution-forest/filament-scaffold
 ```
 
-In the composer.json of your own preject, you need to add a sentence in require, like this:
-```bash
-"require": {
-        ...,
-        "solution-forest/filament-scaffold": "@dev"
-    },
-```
-
-The minimum-stability need to be dev:
-
-```bash
-"minimum-stability": "dev",
-```
-
 Then, you need to connect to the database in the .env file.
 
 
