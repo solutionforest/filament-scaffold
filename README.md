@@ -6,55 +6,44 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
 
 
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
 ## Installation
+After you install and setup the Filament, you need to create the package/solution-forest folder in your project and put all files into the solution-forest folder.
 
-You can install the package via composer:
+In the composer.json of your own preject, you need to add a sentence in require, like this:
+```bash
+"require": {
+        ...,
+        "solution-forest/filament-scaffold": "@dev"
+    },
+```
+
+Also add repositories in the composer.json:
 
 ```bash
-composer require solution-forest/filament-scaffold
+"repositories": {
+        "0":{
+            "type": "path",
+            "url": "./packages/solution-forest/filament-scaffold",
+            "options": {
+                "symlink": true
+            }
+        }
+    },
 ```
 
-You can publish and run the migrations with:
+The minimum-stability need to be dev:
 
 ```bash
-php artisan vendor:publish --tag="filament-scaffold-migrations"
-php artisan migrate
+"minimum-stability": "dev",
 ```
 
-You can publish the config file with:
+Then, you need to connect to the database in the .env file.
 
-```bash
-php artisan vendor:publish --tag="filament-scaffold-config"
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-scaffold-views"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
 
 ## Usage
 
-```php
-$filamentScaffold = new Solutionforest\FilamentScaffold();
-echo $filamentScaffold->echoPhrase('Hello, Solutionforest!');
-```
+In your admin page will have a Scaffolds from. You can choose the table from the connected database or create other table in the form. Then, you can click the "Create" button to create the reesource, model or migration.
 
-## Testing
-
-```bash
-composer test
-```
 
 ## Changelog
 
