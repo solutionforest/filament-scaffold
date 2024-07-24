@@ -9,10 +9,13 @@
 Filament scaffold is a toolkiit for Filament Admin that simplifies the generation of resources. It can automatically generate madels, resources, migration files, and more, creating corresponding forms and table views based on the database table. Filament scaffold aims to speed up development and reduce the time spent writing repetitive code.
 
 ## Features
--Automatic Filament Resource Generation: Generates Filament resource files, including forms and table views, based on specified table names.
--Support for Multiple Resource Types: Can generate models, migration files, factories, controllers, and more.
--Dynamic Form Generation: Automatically generates form fields based on database table structure.
--Seamless Integration with Laravel and Filament: Utilizes Laravel's Artisan commands and Filament's extension mechanism for efficient resource management.
+- Automatic Filament Resource Generation: Generates Filament resource files, including forms and table views, based on specified table names.
+
+- Support for Multiple Resource Types: Can generate models, migration files, factories, controllers, and more.
+
+- Dynamic Form Generation: Automatically generates form fields based on database table structure.
+
+- Seamless Integration with Laravel and Filament: Utilizes Laravel's Artisan commands and Filament's extension mechanism for efficient resource management.
 
 ## Installation
 You can install the package via composer:
