@@ -29,10 +29,14 @@ Then, you need to connect to the database in the .env file.
 ## Usage
 In your admin page will have a Scaffolds from. You can choose the table from the connected database or create other table in the form. Then, you can click the "Create" button to create the reesource, model or migration.
 
-## Remind
-In the resource file, for the table, the table column type default is TextColumn. For the form, the type defualt is TextInput.
+> [!NOTE]
+> In the resource file, for the table, the table column type default is TextColumn. For the form, the type defualt is TextInput.
 
 ## Preview
+
+https://github.com/user-attachments/assets/afd98d2e-3e36-4f59-b103-c13ad66df7ca
+
+
 ![image](https://github.com/user-attachments/assets/6c8cdc4b-1330-487a-acab-17cf94f93f82)
 ![image](https://github.com/user-attachments/assets/c5f6a10f-139d-4344-b135-59f3d18acb30)
 ![image](https://github.com/user-attachments/assets/37872ba4-00f8-414f-a041-f7ab10cef1a8)
