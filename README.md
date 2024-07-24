@@ -25,6 +25,15 @@ composer require solution-forest/filament-scaffold
 
 Then, you need to connect to the database in the .env file.
 
+In your preject, app\Providers\Filament\xxxPanelProvider.php add this code:
+```bash
+public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ..., 
+            ->plugin(FilamentScaffoldPlugin::make());
+    }
+```
 
 ## Usage
 In your admin page will have a Scaffolds from. You can choose the table from the connected database or create other table in the form. Then, you can click the "Create" button to create the reesource, model or migration.
