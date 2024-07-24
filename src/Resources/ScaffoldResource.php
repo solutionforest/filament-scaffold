@@ -53,7 +53,7 @@ class ScaffoldResource extends Resource
                         ->default(true),
                     Forms\Components\Checkbox::make('Create Migration'),
                     Forms\Components\Checkbox::make('Create Factory'),
-                    Forms\Components\Checkbox::make('Create Controller'),
+                    // Forms\Components\Checkbox::make('Create Controller'),
                 ])->columnSpanFull(),
 
                 Forms\Components\Repeater::make('Table')
@@ -231,11 +231,11 @@ class ScaffoldResource extends Resource
             $resourcePath = $matches[1] ?? null;
         }
 
-        if ($data['Create Controller']) {
-            Artisan::call('make:controller', [
-                'name' => $data['Table Name'] . 'Controller',
-            ]);
-        }
+        // if ($data['Create Controller']) {
+        //     Artisan::call('make:controller', [
+        //         'name' => $data['Table Name'] . 'Controller',
+        //     ]);
+        // }
 
         self::overwriteResourceFile($resourcePath, $data);
         self::overwriteMigrationFile($migrationPath, $data);
