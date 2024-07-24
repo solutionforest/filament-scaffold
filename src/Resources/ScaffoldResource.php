@@ -35,7 +35,6 @@ class ScaffoldResource extends Resource
                             $set('Table Name', $tableName);
                             $set('Model', 'app\\Models\\' . ucfirst($tableName));
                             $set('Resource', 'app\\Filament\\Resources\\' . ucfirst($tableName) . 'Resource');
-                            // $set('Repository', 'App\\Admin\\Repositories\\' . ucfirst($tableName));
                             $set('Table', $tableColumns);
                         }),
                 ])->columns(2),
@@ -48,11 +47,6 @@ class ScaffoldResource extends Resource
                     ->default('app\\Filament\\Resources\\')
                     ->columnStart(1),
 
-                // Forms\Components\TextInput::make('Repository')
-                //     ->default('App\\Admin\\Repositories\\')
-                //     ->required()
-                //     ->columnStart(1),
-
                 Forms\Components\Split::make([
                     Forms\Components\Checkbox::make('Create Resource')
                         ->default(true),
@@ -61,9 +55,6 @@ class ScaffoldResource extends Resource
                     Forms\Components\Checkbox::make('Create Migration'),
                     Forms\Components\Checkbox::make('Create Factory'),
                     Forms\Components\Checkbox::make('Create Controller'),
-                    // Forms\Components\Checkbox::make('Run Migrate'),
-                    // Forms\Components\Checkbox::make('Create Lang')
-                    //     ->default(true),
                 ])->columnSpanFull(),
 
                 Forms\Components\Repeater::make('Table')
@@ -119,18 +110,6 @@ class ScaffoldResource extends Resource
                         Forms\Components\Textarea::make('comment')
                             ->default(fn ($record) => $record['comment'] ?? ''),
                     ])->columns(7)->columnSpanFull(),
-
-                // Forms\Components\Split::make([
-                //     Forms\Components\TextInput::make('Translate Title')
-                //         ->default('Translate Title'),
-                //     Forms\Components\TextInput::make('Primary Key')
-                //         ->default('id'),
-                //     Forms\Components\Checkbox::make('Created_at & Updated_at')
-                //         ->inline()
-                //         ->default(true),
-                //     Forms\Components\Checkbox::make('Soft Delete')
-                //         ->inline(),
-                // ])->columnSpanFull(),
             ]);
     }
     
@@ -170,8 +149,6 @@ class ScaffoldResource extends Resource
     {
         return [
             'index' => Pages\CreateScaffold::route('/'),
-            'create' => Pages\CreateScaffold::route('/create'),
-            'edit' => Pages\EditScaffold::route('/{record}/edit'),
         ];
     }
 
@@ -187,29 +164,10 @@ class ScaffoldResource extends Resource
         $resourceParts = explode('\\', $resource);
         $resourcelName = end($resourceParts);
 
-        // $resourceCommand = "make:filament-resource " . ucfirst($resourcelName) . " --generate --view";
-        // $modelCommand = "make:model " . ucfirst($modelName);
-        // $modelWithMigrationCommand = $modelCommand . " -m";
-        // $modelWithFactoryCommand = $modelCommand . " -f";
-        // $modelWithMigrationNFactoryCommand = $modelCommand . " -m -f";
-        // $controllerCommand = "make:controller " . ucfirst($data['Table Name']) . "Controller";
-            
         chdir($basePath);
         $migrationPath = null;
         $resourcePath = null;
         $modelPath = null;
-
-        if ($data['Create Resource']) {
-            Artisan::call('make:filament-resource', [
-                'name' => $resourcelName,
-                '--generate' => true,
-                '--view' => true,
-                '--force' => true,
-            ]);
-            $output = Artisan::output();
-            preg_match('/\[([^\]]+)\]/', $output, $matches);
-            $resourcePath = $matches[1] ?? null;
-        }
 
         if ($data['Create Model'] && $data['Create Migration'] && $data['Create Factory']) {
             Artisan::call('make:model', [
@@ -259,6 +217,18 @@ class ScaffoldResource extends Resource
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $modelPath = $matches[1] ?? null;
             }
+        }
+
+        if ($data['Create Resource']) {
+            Artisan::call('make:filament-resource', [
+                'name' => $resourcelName,
+                '--generate' => true,
+                '--view' => true,
+                '--force' => true,
+            ]);
+            $output = Artisan::output();
+            preg_match('/\[([^\]]+)\]/', $output, $matches);
+            $resourcePath = $matches[1] ?? null;
         }
 
         if ($data['Create Controller']) {
