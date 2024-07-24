@@ -1,8 +1,7 @@
 # This is my package filament-scaffold
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/solution-forest/filament-scaffold/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/solution-forest/filament-scaffold/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/solution-forest/filament-scaffold/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/solution-forest/filament-scaffold/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
+
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
 
 ## Description
