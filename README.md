@@ -35,6 +35,18 @@ public function panel(Panel $panel): Panel
     }
 ```
 
+## Publishing Configuration file
+To publish the configuration file, use:
+```bash
+php artisan vendor:publish --provider="Solutionforest\FilamentScaffold\FilamentScaffoldServiceProvider" --tag="filament-scaffold-config"
+```
+You can turn to false to unable the form.
+```bash
+return [
+    'enabled' => false,
+];
+```
+
 ## Usage
 In your admin page will have a Scaffolds from. You can choose the table from the connected database or create other table in the form. Then, you can click the "Create" button to create the reesource, model or migration.
 
@@ -43,8 +55,7 @@ In your admin page will have a Scaffolds from. You can choose the table from the
 
 ## Preview
 
-https://github.com/user-attachments/assets/afd98d2e-3e36-4f59-b103-c13ad66df7ca
-
+https://github.com/user-attachments/assets/2978ea6c-876e-44f4-908a-a6f4bd48fc6f
 
 ![image](https://github.com/user-attachments/assets/6c8cdc4b-1330-487a-acab-17cf94f93f82)
 ![image](https://github.com/user-attachments/assets/c5f6a10f-139d-4344-b135-59f3d18acb30)
