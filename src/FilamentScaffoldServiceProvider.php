@@ -33,7 +33,7 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/filament-scaffold.php' => config_path('filament-scaffold.php'),
-        ]);
+        ], 'filament-scaffold-config');
     
     }
 
