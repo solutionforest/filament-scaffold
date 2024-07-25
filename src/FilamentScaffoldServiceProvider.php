@@ -25,7 +25,7 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/filament-scaffold.php' => config_path('filament-scaffold.php')
+            __DIR__ . '/../config/filament-scaffold.php' => config_path('filament-scaffold.php'),
         ], 'filament-scaffold-config');
 
     }
