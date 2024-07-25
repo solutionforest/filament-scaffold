@@ -99,9 +99,9 @@ class ScaffoldResource extends Resource
                             ->default('')
                             ->options([
                                 '' => 'NULL',
-                                'PRI' => 'Primary',
-                                'UNI' => 'Unique',
-                                'MUL' => 'Index',
+                                'primary' => 'Primary',
+                                'unique' => 'Unique',
+                                'index' => 'Index',
                             ])
                             ->default(fn ($record) => $record['key'] ?? ''),
                         Forms\Components\TextInput::make('default')
@@ -151,6 +151,12 @@ class ScaffoldResource extends Resource
             'macaddress' => 'macAddress',
         ];
 
+        $keyMapping = [
+            'PRI' => 'primary',
+            'UNI' => 'unique',
+            'MUL' => 'index',
+        ];
+
         foreach ($columns as $column) {
             if ($column->Key === 'PRI') {
                 continue;
@@ -159,13 +165,16 @@ class ScaffoldResource extends Resource
             $type = preg_replace('/\(.+\)/', '', $column->Type);
             $type = preg_split('/\s+/', $type)[0];
 
+            $key = $column->Key;
+
             $translatedType = $typeMapping[$type] ?? $type;
+            $translatedKey = $keyMapping[$key] ?? $key;
 
             $columnDetails[] = [
                 'name' => $column->Field,
                 'type' => $translatedType,
                 'nullable' => $column->Null === 'YES',
-                'key' => $column->Key,
+                'key' => $translatedKey,
                 'default' => $column->Default,
                 'comment' => '', 
             ];
