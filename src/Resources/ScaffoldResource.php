@@ -65,30 +65,30 @@ class ScaffoldResource extends Resource
                         Forms\Components\TextInput::make('translation'),
                         Forms\Components\Select::make('type')
                             ->options([
-                                'varchar' => 'string',
-                                'int' => 'integer',
-                                'bigint' => 'bigInteger',
+                                'string' => 'string',
+                                'integer' => 'integer',
+                                'bigInteger' => 'bigInteger',
                                 'text' => 'text',
                                 'float' => 'float',
                                 'double' => 'double',
                                 'decimal' => 'decimal',
-                                'bool' => 'boolean',
+                                'boolean' => 'boolean',
                                 'date' => 'date',
                                 'time' => 'time',
                                 'datetime' => 'dateTime',
                                 'timestamp' => 'timestamp',
                                 'char' => 'char',
-                                'mediumtext' => 'mediumText',
-                                'longtext' => 'longText',
-                                'tinyint' => 'tinyInteger',
-                                'smallint' => 'smallInteger',
-                                'mediumint' => 'mediumInteger',
+                                'mediumText' => 'mediumText',
+                                'longText' => 'longText',
+                                'tinyInteger' => 'tinyInteger',
+                                'smallInteger' => 'smallInteger',
+                                'mediumInteger' => 'mediumInteger',
                                 'json' => 'json',
                                 'jsonb' => 'jsonb',
                                 'binary' => 'binary',
                                 'enum' => 'enum',
-                                'ipaddress' => 'ipAddress',
-                                'macaddress' => 'macAddress',
+                                'ipAddress' => 'ipAddress',
+                                'macAddress' => 'macAddress',
                             ])
                             ->default(fn ($record) => $record['type'] ?? 'varchar')
                             ->reactive(),
@@ -124,6 +124,33 @@ class ScaffoldResource extends Resource
         $columns = DB::select('SHOW COLUMNS FROM ' . $tableName);
         $columnDetails = [];
 
+        $typeMapping = [
+            'varchar' => 'string',
+            'int' => 'integer',
+            'bigint' => 'bigInteger',
+            'text' => 'text',
+            'float' => 'float',
+            'double' => 'double',
+            'decimal' => 'decimal',
+            'bool' => 'boolean',
+            'date' => 'date',
+            'time' => 'time',
+            'datetime' => 'dateTime',
+            'timestamp' => 'timestamp',
+            'char' => 'char',
+            'mediumtext' => 'mediumText',
+            'longtext' => 'longText',
+            'tinyint' => 'tinyInteger',
+            'smallint' => 'smallInteger',
+            'mediumint' => 'mediumInteger',
+            'json' => 'json',
+            'jsonb' => 'jsonb',
+            'binary' => 'binary',
+            'enum' => 'enum',
+            'ipaddress' => 'ipAddress',
+            'macaddress' => 'macAddress',
+        ];
+
         foreach ($columns as $column) {
             if ($column->Key === 'PRI') {
                 continue;
@@ -132,13 +159,15 @@ class ScaffoldResource extends Resource
             $type = preg_replace('/\(.+\)/', '', $column->Type);
             $type = preg_split('/\s+/', $type)[0];
 
+            $translatedType = $typeMapping[$type] ?? $type;
+
             $columnDetails[] = [
                 'name' => $column->Field,
-                'type' => $type,
+                'type' => $translatedType,
                 'nullable' => $column->Null === 'YES',
                 'key' => $column->Key,
                 'default' => $column->Default,
-                'comment' => '',
+                'comment' => '', 
             ];
         }
 
