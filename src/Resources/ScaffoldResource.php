@@ -167,7 +167,7 @@ class ScaffoldResource extends Resource
                 'nullable' => $column->Null === 'YES',
                 'key' => $column->Key,
                 'default' => $column->Default,
-                'comment' => '', 
+                'comment' => '',
             ];
         }
 
