@@ -158,7 +158,7 @@ class ScaffoldResource extends Resource
         ];
 
         foreach ($columns as $column) {
-            if ($column->Field === 'id' && $column->Field === 'ID') {
+            if ($column->Field === 'id' || $column->Field === 'ID') {
                 continue;
             }
 
