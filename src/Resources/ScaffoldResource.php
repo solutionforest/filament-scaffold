@@ -362,14 +362,27 @@ class ScaffoldResource extends Resource
 
     public static function overwriteModelFile($filePath, $data)
     {
+        $column = self::getColumn($data);
+
         if (file_exists($filePath)) {
             $content = file_get_contents($filePath);
             $chooseTable = <<<EOD
                 use HasFactory;
                 protected \$table = '{$data['Table Name']}';
+                protected \$fillable = $column
                 EOD;
+
             $content = preg_replace('/use HasFactory;/s', $chooseTable, $content);
             file_put_contents($filePath, $content);
         }
+    }
+    
+    public static function getColumn($data)
+    {
+        $fields = [];
+        foreach ($data['Table'] as $column) {
+            $fields[] = "{$column['name']}";
+        }
+        return "['" . implode("','", $fields) . "']";
     }
 }
