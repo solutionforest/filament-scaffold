@@ -15,10 +15,10 @@ class FilamentScaffoldPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        if(config('filament-scaffold.enabled', false)) {
+        if (config('filament-scaffold.enabled', false)) {
             $panel->resources([
-                        ScaffoldResource::class
-                    ]);
+                ScaffoldResource::class,
+            ]);
         }
     }
 
