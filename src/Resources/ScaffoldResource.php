@@ -376,13 +376,14 @@ class ScaffoldResource extends Resource
             file_put_contents($filePath, $content);
         }
     }
-    
+
     public static function getColumn($data)
     {
         $fields = [];
         foreach ($data['Table'] as $column) {
             $fields[] = "{$column['name']}";
         }
+
         return "['" . implode("','", $fields) . "']";
     }
 }
