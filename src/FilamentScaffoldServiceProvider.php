@@ -22,13 +22,6 @@ class FilamentScaffoldServiceProvider extends PackageServiceProvider
             ->hasConfigFile();
     }
 
-    public function register(): void
-    {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/filament-scaffold.php', 'filament-scaffold'
-        );
-    }
-
     public function boot(): void
     {
         $this->publishes([
