@@ -10,13 +10,6 @@ class CreateScaffold extends CreateRecord
 {
     protected static string $resource = ScaffoldResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        ScaffoldResource::generateFiles($data);
-
-        return $data;
-    }
-
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
         ScaffoldResource::generateFiles($data);

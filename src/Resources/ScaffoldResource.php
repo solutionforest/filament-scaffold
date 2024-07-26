@@ -9,7 +9,6 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ScaffoldResource extends Resource
 {
@@ -54,7 +53,8 @@ class ScaffoldResource extends Resource
                         ->default(true),
                     Forms\Components\Checkbox::make('Create Migration'),
                     Forms\Components\Checkbox::make('Create Factory'),
-                    // Forms\Components\Checkbox::make('Create Controller'),
+                    Forms\Components\Checkbox::make('Create Controller'),
+                    Forms\Components\Checkbox::make('Run Migrate'),
                 ])->columnSpanFull(),
 
                 Forms\Components\Repeater::make('Table')
@@ -164,7 +164,7 @@ class ScaffoldResource extends Resource
         ];
 
         foreach ($columns as $column) {
-            if ($column->Field === 'id' || $column->Field === 'ID') {
+            if ($column->Field === 'id' || $column->Field === 'ID' || $column->Field === 'created_at' || $column->Field === 'updated_at' || $column->Field === 'deleted_at') {
                 continue;
             }
 
@@ -196,22 +196,26 @@ class ScaffoldResource extends Resource
         ];
     }
 
+    public static function getFileName($path)
+    {
+        $fileNameWithExtension = basename($path);
+        $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+        return $fileName;
+    }
+
     public static function generateFiles(array $data)
     {
         $basePath = base_path();
 
-        $model = preg_replace('/\(.+\)/', '', $data['Model']);
-        $modelParts = explode('\\', $model);
-        $modelName = end($modelParts);
+        $modelName = self::getFileName($data['Model']);
 
-        $resource = preg_replace('/\(.+\)/', '', $data['Resource']);
-        $resourceParts = explode('\\', $resource);
-        $resourcelName = end($resourceParts);
+        $resourcelName = self::getFileName($data['Resource']);
 
         chdir($basePath);
         $migrationPath = null;
         $resourcePath = null;
         $modelPath = null;
+        $controllerPath = null;
 
         if ($data['Create Migration']) {
             Artisan::call('make:migration', [
@@ -253,22 +257,26 @@ class ScaffoldResource extends Resource
             $resourcePath = $matches[1] ?? null;
         }
 
-        // if ($data['Create Controller']) {
-        //     Artisan::call('make:controller', [
-        //         'name' => $data['Table Name'] . 'Controller'
-        //     ]);
-        // }
+        if ($data['Create Controller']) {
+            Artisan::call('make:controller', [
+                'name' => $data['Table Name'] . 'Controller', 
+                '--model' => $modelName,
+                '--resource' => true, 
+            ]);
+            $output = Artisan::output();
+            preg_match('/\[([^\]]+)\]/', $output, $matches);
+            $controllerPath = $matches[1] ?? null;
+        }
 
         self::overwriteResourceFile($resourcePath, $data);
         self::overwriteMigrationFile($migrationPath, $data);
         self::overwriteModelFile($modelPath, $data);
+        self::overwriteControllerFile($controllerPath, $data);
     }
 
     public static function overwriteResourceFile($resourceFile, $data)
     {
-        $model = preg_replace('/\(.+\)/', '', $data['Model']);
-        $modelParts = explode('\\', $model);
-        $modelName = end($modelParts);
+        $modelName = self::getFileName($data['Model']);
         
         if (file_exists($resourceFile)) {
             $content = file_get_contents($resourceFile);
@@ -285,30 +293,34 @@ class ScaffoldResource extends Resource
 
             $formFunction = <<<EOD
                 public static function form(Form \$form): Form
-                {
-                    return \$form
-                        ->schema($formSchema);
-                }
+                    {
+                        return \$form
+                            ->schema([
+                                $formSchema
+                            ]);
+                    }
                 EOD;
 
             $tableFunction = <<<EOD
                 public static function table(Table \$table): Table
-                {
-                    return \$table
-                        ->columns($tableSchema)
-                        ->filters([
-                            //
-                        ])
-                        ->actions([
-                            Tables\Actions\ViewAction::make(),
-                            Tables\Actions\EditAction::make(),
-                        ])
-                        ->bulkActions([
-                            Tables\Actions\BulkActionGroup::make([
-                                Tables\Actions\DeleteBulkAction::make(),
-                            ]),
-                        ]);
-                }
+                    {
+                        return \$table
+                            ->columns([
+                                $tableSchema
+                            ])
+                            ->filters([
+                                //
+                            ])
+                            ->actions([
+                                Tables\Actions\ViewAction::make(),
+                                Tables\Actions\EditAction::make(),
+                            ])
+                            ->bulkActions([
+                                Tables\Actions\BulkActionGroup::make([
+                                    Tables\Actions\DeleteBulkAction::make(),
+                                ]),
+                            ]);
+                    }
                 EOD;
 
             $content = preg_replace('/use\s+App\\\\Models\\\\.*?;/s', $useClassChange, $content);
@@ -326,7 +338,7 @@ class ScaffoldResource extends Resource
         foreach ($data['Table'] as $column) {
             $fields[] = "Forms\Components\TextInput::make('{$column['name']}')->required()";
         }
-        return "[" . implode(",\n", $fields) . "]";
+        return implode(",\n", $fields);
     }
 
     public static function generateTableSchema($data)
@@ -335,7 +347,7 @@ class ScaffoldResource extends Resource
         foreach ($data['Table'] as $column) {
             $columns[] = "Tables\Columns\TextColumn::make('{$column['name']}')->sortable()->searchable()";
         }
-        return "[" . implode(",\n", $columns) . "]";
+        return implode(",\n", $columns);
     }
 
     public static function overwriteMigrationFile($filePath, $data)
@@ -346,24 +358,27 @@ class ScaffoldResource extends Resource
             $upPart = self::generateUp($data);
             $upFunction = <<<EOD
                 public function up(): void
-                {
-                    Schema::create('{$data['Table Name']}', function (Blueprint \$table) {
-                        \$table->id();
-                        $upPart;
-                }
+                    {
+                        Schema::create('{$data['Table Name']}', function (Blueprint \$table) {
+                            \$table->id();
+                            $upPart;
+                    }
                 EOD;
 
             $downFunction = <<<EOD
                 public function down()
-                {
-                    Schema::dropIfExists('{$data['Table Name']}');
-                }
+                    {
+                        Schema::dropIfExists('{$data['Table Name']}');
+                    }
                 EOD;
 
             $content = preg_replace('/public function up.*?{.*?}/s', $upFunction, $content);
             $content = preg_replace('/public function down.*?{.*?}/s', $downFunction, $content);
 
             file_put_contents($filePath, $content);
+        }
+        if($data['Run Migrate']==true){
+            Artisan::call('migrate');
         }
     }
 
@@ -424,15 +439,15 @@ class ScaffoldResource extends Resource
 
             $chooseTable = <<<EOD
                 use HasFactory;
-                protected \$table = '{$data['Table Name']}';
-                protected \$fillable = $column;
+                    protected \$table = '{$data['Table Name']}';
+                    protected \$fillable = $column;
                 EOD;
 
             $withSoftdel = <<<EOD
                 use HasFactory;
-                use SoftDeletes;
-                protected \$table = '{$data['Table Name']}';
-                protected \$fillable = $column;
+                    use SoftDeletes;
+                    protected \$table = '{$data['Table Name']}';
+                    protected \$fillable = $column;
                 EOD;
 
             if($data['Soft Delete']==true) {
@@ -452,5 +467,48 @@ class ScaffoldResource extends Resource
             $fields[] = "{$column['name']}";
         }
         return "['" . implode("','", $fields) . "']";
+    }
+
+    public static function overwriteControllerFile($filePath, $data)
+    {
+        if (file_exists($filePath)) {
+            $content = file_get_contents($filePath);
+            $changeIndex = <<<EOD
+                public function index()
+                    {
+                        return 'This your index page';
+                    }
+                EOD;
+
+            $content = preg_replace('/public function index.*?{.*?}/s', $changeIndex, $content);
+            file_put_contents($filePath, $content);
+        }
+
+        $controllerName = self::getFileName($filePath);
+        self::addRoutes($data, $controllerName);
+    }
+
+    public static function addRoutes($data, $controllerName)
+    {
+        $filePath = base_path('routes\web.php');
+        if (file_exists($filePath)) {
+            $content = file_get_contents($filePath);
+            $useStatement = <<<EOD
+                use Illuminate\Support\Facades\Route;
+                use App\Http\Controllers\\$controllerName;
+                EOD;
+
+            $addRoute = <<<EOD
+
+                Route::resource('{$data['Table Name']}', {$controllerName}::class)->only([
+                    'index', 'show'
+                ]);
+                EOD;
+                
+            $content = preg_replace('/use Illuminate\\\\Support\\\\Facades\\\\Route;/s', $useStatement, $content); 
+            $content .= $addRoute;
+                
+            file_put_contents($filePath, $content);
+        }
     }
 }
