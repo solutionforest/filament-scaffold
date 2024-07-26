@@ -2,6 +2,10 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 0.0.5 - 2024-07-26
+
+**Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.4...0.0.5
+
 ## 0.0.4 - 2024-07-25
 
 **Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.3...0.0.4
