@@ -2,13 +2,13 @@
 
 namespace Solutionforest\FilamentScaffold\Resources;
 
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
 class ScaffoldResource extends Resource
 {
@@ -118,10 +118,11 @@ class ScaffoldResource extends Resource
                 ])->columnSpanFull(),
             ]);
     }
-    
+
     public static function getAllTableNames(): array
     {
         $tables = DB::select('SHOW TABLES');
+
         return array_map('current', $tables);
     }
 
@@ -182,7 +183,7 @@ class ScaffoldResource extends Resource
                 'nullable' => $column->Null === 'YES',
                 'key' => $translatedKey,
                 'default' => $column->Default,
-                'comment' => '', 
+                'comment' => '',
             ];
         }
 
@@ -200,6 +201,7 @@ class ScaffoldResource extends Resource
     {
         $fileNameWithExtension = basename($path);
         $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
+
         return $fileName;
     }
 
@@ -219,24 +221,24 @@ class ScaffoldResource extends Resource
 
         if ($data['Create Migration']) {
             Artisan::call('make:migration', [
-                'name' => 'create_' . $data['Table Name'] . '_table'
+                'name' => 'create_' . $data['Table Name'] . '_table',
             ]);
             $output = Artisan::output();
             if (strpos($output, 'Migration') !== false) {
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $migrationPath = $matches[1] ?? null;
             }
-        } 
+        }
 
         if ($data['Create Factory']) {
             Artisan::call('make:factory', [
-                'name' => $data['Table Name'] . 'Factory'
+                'name' => $data['Table Name'] . 'Factory',
             ]);
         }
 
         if ($data['Create Model']) {
             Artisan::call('make:model', [
-                'name' => $modelName
+                'name' => $modelName,
             ]);
             $output = Artisan::output();
             if (strpos($output, 'Model') !== false) {
@@ -259,9 +261,9 @@ class ScaffoldResource extends Resource
 
         if ($data['Create Controller']) {
             Artisan::call('make:controller', [
-                'name' => $data['Table Name'] . 'Controller', 
+                'name' => $data['Table Name'] . 'Controller',
                 '--model' => $modelName,
-                '--resource' => true, 
+                '--resource' => true,
             ]);
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
@@ -277,10 +279,10 @@ class ScaffoldResource extends Resource
     public static function overwriteResourceFile($resourceFile, $data)
     {
         $modelName = self::getFileName($data['Model']);
-        
+
         if (file_exists($resourceFile)) {
             $content = file_get_contents($resourceFile);
-            
+
             $formSchema = self::generateFormSchema($data);
             $tableSchema = self::generateTableSchema($data);
             $useClassChange = <<<EOD
@@ -338,6 +340,7 @@ class ScaffoldResource extends Resource
         foreach ($data['Table'] as $column) {
             $fields[] = "Forms\Components\TextInput::make('{$column['name']}')->required()";
         }
+
         return implode(",\n", $fields);
     }
 
@@ -347,6 +350,7 @@ class ScaffoldResource extends Resource
         foreach ($data['Table'] as $column) {
             $columns[] = "Tables\Columns\TextColumn::make('{$column['name']}')->sortable()->searchable()";
         }
+
         return implode(",\n", $columns);
     }
 
@@ -377,7 +381,7 @@ class ScaffoldResource extends Resource
 
             file_put_contents($filePath, $content);
         }
-        if($data['Run Migrate']==true){
+        if ($data['Run Migrate'] == true) {
             Artisan::call('migrate');
         }
     }
@@ -385,18 +389,18 @@ class ScaffoldResource extends Resource
     public static function generateUp(array $data): string
     {
         $fields = array_map(
-            fn(array $column): string => self::generateColumnDefinition($column),
+            fn (array $column): string => self::generateColumnDefinition($column),
             $data['Table']
-            );
+        );
 
-        if($data['Created_at & Updated_at']==true) {
-            $fields[] = "\$table->timestamps()";
+        if ($data['Created_at & Updated_at'] == true) {
+            $fields[] = '$table->timestamps()';
         }
-        
-        if($data['Soft Delete']==true) {
-            $fields[] = "\$table->softDeletes()";
+
+        if ($data['Soft Delete'] == true) {
+            $fields[] = '$table->softDeletes()';
         }
-            
+
         return implode(";\n", $fields);
     }
 
@@ -405,17 +409,17 @@ class ScaffoldResource extends Resource
         $definition = "\$table->{$column['type']}('{$column['name']}')";
 
         $methods = [
-            'nullable' => fn(): bool => $column['nullable'] ?? false,
-            'default' => fn(): ?string => $column['default'] ?? null,
-            'comment' => fn(): ?string => $column['comment'] ?? null,
-            'key' => fn(): ?string => $column['key'] ?? null,
+            'nullable' => fn (): bool => $column['nullable'] ?? false,
+            'default' => fn (): ?string => $column['default'] ?? null,
+            'comment' => fn (): ?string => $column['comment'] ?? null,
+            'key' => fn (): ?string => $column['key'] ?? null,
         ];
 
         foreach ($methods as $method => $condition) {
             $value = $condition();
             if ($value !== null && $value !== false) {
                 $definition .= match ($method) {
-                    'nullable' => "->nullable()",
+                    'nullable' => '->nullable()',
                     'default' => "->default('{$value}')",
                     'comment' => "->comment('{$value}')",
                     'key' => "->{$value}()",
@@ -450,7 +454,7 @@ class ScaffoldResource extends Resource
                     protected \$fillable = $column;
                 EOD;
 
-            if($data['Soft Delete']==true) {
+            if ($data['Soft Delete'] == true) {
                 $content = preg_replace('/use Illuminate\\\\Database\\\\Eloquent\\\\Model;/s', $useSoftDel, $content);
                 $content = preg_replace('/use HasFactory;/s', $withSoftdel, $content);
             } else {
@@ -466,6 +470,7 @@ class ScaffoldResource extends Resource
         foreach ($data['Table'] as $column) {
             $fields[] = "{$column['name']}";
         }
+
         return "['" . implode("','", $fields) . "']";
     }
 
@@ -473,7 +478,7 @@ class ScaffoldResource extends Resource
     {
         if (file_exists($filePath)) {
             $content = file_get_contents($filePath);
-            $changeIndex = <<<EOD
+            $changeIndex = <<<'EOD'
                 public function index()
                     {
                         return 'This your index page';
@@ -504,10 +509,10 @@ class ScaffoldResource extends Resource
                     'index', 'show'
                 ]);
                 EOD;
-                
-            $content = preg_replace('/use Illuminate\\\\Support\\\\Facades\\\\Route;/s', $useStatement, $content); 
+
+            $content = preg_replace('/use Illuminate\\\\Support\\\\Facades\\\\Route;/s', $useStatement, $content);
             $content .= $addRoute;
-                
+
             file_put_contents($filePath, $content);
         }
     }
