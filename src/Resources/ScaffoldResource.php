@@ -414,8 +414,7 @@ class ScaffoldResource extends Resource
                                 ->color('gray')
                                 ->close(),
                         ])
-                        ->send()
-                        ->sendToDatabase(\App\Filament\Resources\VariableStorerResource::getCurrentLoggedUserNotifRecipient());
+                        ->send();
                 }
             }
         }
@@ -498,8 +497,7 @@ class ScaffoldResource extends Resource
                 //         ->color('gray')
                 //         ->close(),
                 // ])
-                ->send()
-                ->sendToDatabase(\App\Filament\Resources\VariableStorerResource::getCurrentLoggedUserNotifRecipient());
+                ->send();
         } else {
             /********************************************
              * ERROR
