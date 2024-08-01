@@ -228,6 +228,7 @@ class ScaffoldResource extends Resource
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $migrationPath = $matches[1] ?? null;
             }
+            self::overwriteMigrationFile($migrationPath, $data);
         }
 
         if ($data['Create Factory']) {
@@ -245,6 +246,7 @@ class ScaffoldResource extends Resource
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $modelPath = $matches[1] ?? null;
             }
+            self::overwriteModelFile($modelPath, $data);
         }
 
         if ($data['Create Resource']) {
@@ -257,6 +259,7 @@ class ScaffoldResource extends Resource
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
             $resourcePath = $matches[1] ?? null;
+            self::overwriteResourceFile($resourcePath, $data);
         }
 
         if ($data['Create Controller']) {
@@ -268,12 +271,8 @@ class ScaffoldResource extends Resource
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
             $controllerPath = $matches[1] ?? null;
+            self::overwriteControllerFile($controllerPath, $data);
         }
-
-        self::overwriteResourceFile($resourcePath, $data);
-        self::overwriteMigrationFile($migrationPath, $data);
-        self::overwriteModelFile($modelPath, $data);
-        self::overwriteControllerFile($controllerPath, $data);
     }
 
     public static function overwriteResourceFile($resourceFile, $data)
