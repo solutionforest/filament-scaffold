@@ -5,15 +5,15 @@ namespace Solutionforest\FilamentScaffold\Resources;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Filament\Notifications\Notification;
-use Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 use Illuminate\Support\Str;
+use Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
-if (!defined('STDIN')) {
+if (! defined('STDIN')) {
     define('STDIN', fopen('php://stdin', 'r'));
 }
 
@@ -40,7 +40,6 @@ class ScaffoldResource extends Resource
      * @var string|null
      */
     protected static ?string $modelLabel = 'Scaffold';
-
 
     public static function form(Form $form): Form
     {
@@ -79,7 +78,7 @@ class ScaffoldResource extends Resource
                                         $set('Table', $tableColumns);
                                     }),
                             ]),
-    
+
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('Model')
@@ -91,7 +90,7 @@ class ScaffoldResource extends Resource
                             ]),
                     ])
                     ->columnSpan(2),
-    
+
                 /********************************************
                  * GENERATION OPTIONS
                  */
@@ -111,11 +110,11 @@ class ScaffoldResource extends Resource
                         Forms\Components\Checkbox::make('Create Route'),
                         Forms\Components\Checkbox::make('Create Policy')
                             ->default(false)
-                            ->hidden(fn () => !class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class))
+                            ->hidden(fn () => ! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
                     ])
                     ->columns(2)
                     ->columnSpan(1),
-    
+
                 /********************************************
                  * TABLE STRUCTURE
                  */
@@ -177,10 +176,10 @@ class ScaffoldResource extends Resource
                                     ->autosize()
                                     ->default(fn ($record) => $record['comment'] ?? ''),
                             ])
-                            ->columns(7)
+                            ->columns(7),
                     ])
                     ->columnSpan('full'),
-    
+
                 /********************************************
                  * MIGRATION ADDITIONAL FEATURES
                  */
@@ -200,7 +199,6 @@ class ScaffoldResource extends Resource
             ])
             ->columns(3);
     }
-
 
     public static function getAllTableNames(): array
     {
@@ -350,14 +348,14 @@ class ScaffoldResource extends Resource
                 '--force' => true,
                 '--no-interaction' => true,
             ];
-            
+
             /**************************
              * --simple (modal type)
              */
             if ($data['Simple Resource']) {
                 $command['--simple'] = true;
             }
-            
+
             Artisan::call('make:filament-resource', $command);
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
@@ -419,7 +417,6 @@ class ScaffoldResource extends Resource
             }
         }
 
-
         /********************************************
          * EXECUTE THE CREATING OF ROUTE
          * IF Create Route is Check
@@ -444,7 +441,7 @@ class ScaffoldResource extends Resource
             'route:cache',
             'route:clear',
             'icons:cache',
-            'filament:cache-components'
+            'filament:cache-components',
         ];
 
         $commandErrors = [];
@@ -452,9 +449,9 @@ class ScaffoldResource extends Resource
         foreach ($commands as $command) {
             $fullCommand = "php artisan $command";
             $descriptorspec = [
-                0 => ["pipe", "r"], //stdin
-                1 => ["pipe", "w"], //stdout
-                2 => ["pipe", "w"]  //stderr
+                0 => ['pipe', 'r'], //stdin
+                1 => ['pipe', 'w'], //stdout
+                2 => ['pipe', 'w'],  //stderr
             ];
 
             $process = proc_open($fullCommand, $descriptorspec, $pipes, base_path());
@@ -470,7 +467,7 @@ class ScaffoldResource extends Resource
                 if ($return_value !== 0) {
                     Log::error("Error running artisan command: $fullCommand", [
                         'error' => $error,
-                        'output' => $output
+                        'output' => $output,
                     ]);
                     $commandErrors[] = $fullCommand;
                 }
@@ -503,14 +500,13 @@ class ScaffoldResource extends Resource
              * ERROR
              */
             Notification::make()
-                ->title("Error running commands")
-                ->body("Check logs for more details.")
+                ->title('Error running commands')
+                ->body('Check logs for more details.')
                 ->danger()
                 ->send();
         }
 
     }
-
 
     public static function overwriteResourceFile($resourceFile, $data)
     {
@@ -757,22 +753,23 @@ class ScaffoldResource extends Resource
     /********************************************
      * CREATE POLICY FILE, IF THERE'S A FilamentShield
      */
-    public static function updatePolicyFile($filePath, $modelName) {
+    public static function updatePolicyFile($filePath, $modelName)
+    {
 
         // --- Check if FilamentShield is installed
-        if (!class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
+        if (! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
             return;
         }
-    
+
         if (file_exists($filePath)) {
             $content = file_get_contents($filePath);
-            
+
             $modelFunctionNameVariable = Str::snake(Str::plural($modelName));
             $permissionBase = Str::of($modelName)
                 ->afterLast('\\')
                 ->snake()
                 ->replace('_', '::');
-            
+
             $methodTemplates = [
                 'import_data' => "return \$user->can('import_data_{$permissionBase}');",
                 'download_template_file' => "return \$user->can('download_template_file_{$permissionBase}');",
@@ -787,22 +784,23 @@ class ScaffoldResource extends Resource
                 'forceDelete' => "return \$user->can('force_delete_{$permissionBase}');",
                 'forceDeleteAny' => "return \$user->can('force_delete_any_{$permissionBase}');",
                 'replicate' => "return \$user->can('replicate_{$permissionBase}');",
-                'reorder' => "return \$user->can('reorder_{$permissionBase}');"
+                'reorder' => "return \$user->can('reorder_{$permissionBase}');",
             ];
-            
+
             $newMethods = '';
             foreach ($methodTemplates as $method => $returnStatement) {
-                $methodSignature = "public function {$method}(User \$user" . 
-                    (in_array($method, ['viewAny', 'create', 'deleteAny', 'restoreAny', 'forceDeleteAny', 'reorder', 'import_data', 'download_template_file']) 
-                        ? "" 
+                $methodSignature = "public function {$method}(User \$user" .
+                    (
+                        in_array($method, ['viewAny', 'create', 'deleteAny', 'restoreAny', 'forceDeleteAny', 'reorder', 'import_data', 'download_template_file'])
+                        ? ''
                         : ", {$modelName} \${$modelFunctionNameVariable}"
-                    ) . 
-                    "): bool";
-    
+                    ) .
+                    '): bool';
+
                 $methodBody = "    {\n        {$returnStatement}\n    }";
-    
+
                 $fullMethod = "\n\n    {$methodSignature}\n{$methodBody}";
-    
+
                 // --- Check if the method already exists
                 if (strpos($content, "public function {$method}(") === false) {
                     // Method doesn't exist, add it to newMethods
@@ -814,13 +812,11 @@ class ScaffoldResource extends Resource
                     $content = preg_replace($pattern, $replacement, $content);
                 }
             }
-            
+
             // --- Add new methods inside the class
             $content = preg_replace('/}(\s*)$/', $newMethods . "\n}", $content);
-            
+
             file_put_contents($filePath, $content);
         }
     }
-
-
 }
