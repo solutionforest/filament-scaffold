@@ -5,8 +5,6 @@ parameters:
     level: 8
     paths:
         - src
-        - config
-        - database
     ignoreErrors:
         - 
             message: '#Call to static method getUrl\(\) on an unknown class BezhanSalleh\\FilamentShield\\Resources\\RoleResource#'
