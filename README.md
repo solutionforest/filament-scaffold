@@ -57,6 +57,8 @@ In your admin page will have a Scaffolds from. You can choose the table from the
 
 https://github.com/user-attachments/assets/adb41e0c-df7c-48cf-8d33-d5e7d985efb7
 
+![image](https://github.com/user-attachments/assets/48aaee63-f46c-4d9f-b6d1-0539384b2538)
+
 ![image](https://github.com/user-attachments/assets/6c8cdc4b-1330-487a-acab-17cf94f93f82)
 ![image](https://github.com/user-attachments/assets/c5f6a10f-139d-4344-b135-59f3d18acb30)
 ![image](https://github.com/user-attachments/assets/37872ba4-00f8-414f-a041-f7ab10cef1a8)
