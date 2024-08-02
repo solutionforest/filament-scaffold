@@ -414,7 +414,7 @@ class ScaffoldResource extends Resource
                                 \Filament\Notifications\Actions\Action::make('view')
                                     ->label('Configure Permissions')
                                     ->button()
-                                    ->url(\BezhanSalleh\FilamentShield\Resources\RoleResource::getUrl(), shouldOpenInNewTab: true),
+                                    ->url($url, shouldOpenInNewTab: true),
                                 \Filament\Notifications\Actions\Action::make('close')
                                     ->color('gray')
                                     ->close(),
