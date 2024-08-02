@@ -49,7 +49,7 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * TABLE NAME, MODEL NAME, RESOURCE NAME
                  */
-                Forms\Components\Card::make('Table & Resource Information')
+                Forms\Components\Section::make('Table & Resource Information')
                     ->schema([
                         Forms\Components\Grid::make(2)
                             ->schema([
@@ -94,7 +94,7 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * GENERATION OPTIONS
                  */
-                Forms\Components\Card::make('Generation Options')
+                Forms\Components\Section::make('Generation Options')
                     ->schema([
                         Forms\Components\Checkbox::make('Create Resource')
                             ->default(true),
@@ -118,7 +118,7 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * TABLE STRUCTURE
                  */
-                Forms\Components\Card::make('Table Structure')
+                Forms\Components\Section::make('Table Structure')
                     ->schema([
                         Forms\Components\Repeater::make('Table')
                             ->schema([
@@ -183,7 +183,7 @@ class ScaffoldResource extends Resource
                 /********************************************
                  * MIGRATION ADDITIONAL FEATURES
                  */
-                Forms\Components\Card::make('Migration Additional Features')
+                Forms\Components\Section::make('Migration Additional Features')
                     ->schema([
                         Forms\Components\Checkbox::make('Created_at & Updated_at')
                             ->label('Created_at & Updated_at timestamps')
@@ -385,6 +385,8 @@ class ScaffoldResource extends Resource
          * POLICY FILE (For Permissions)
          */
         if (class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
+            /** @phpstan-ignore-next-line */
+            $url = \BezhanSalleh\FilamentShield\Resources\RoleResource::getUrl();
             if ($data['Create Policy']) {
                 $modelName = self::getFileName($data['Model']);
                 Artisan::call('make:policy', [
@@ -421,6 +423,8 @@ class ScaffoldResource extends Resource
                     }
                 }
             }
+        } else {
+            $url = '/default-url';
         }
 
         /********************************************

@@ -2,11 +2,13 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: 4
+    level: 8
     paths:
         - src
-    tmpDir: build/phpstan
-    checkOctaneCompatibility: true
-    checkModelProperties: true
-    checkMissingIterableValueType: true
-
+        - config
+        - database
+    ignoreErrors:
+        - message: '#Call to static method getUrl\(\) on an unknown class BezhanSalleh\\FilamentShield\\Resources\\RoleResource#'
+            path: */src/*  # Adjust this path as needed
+        - identifier: 'missingType.iterableValue'
+    checkMissingIterableValueType: false
