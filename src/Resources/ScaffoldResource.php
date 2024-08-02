@@ -315,6 +315,7 @@ class ScaffoldResource extends Resource
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $migrationPath = $matches[1] ?? null;
             }
+            self::overwriteMigrationFile($migrationPath, $data);
         }
 
         if ($data['Create Factory']) {
@@ -337,6 +338,7 @@ class ScaffoldResource extends Resource
                 preg_match('/\[([^\]]+)\]/', $output, $matches);
                 $modelPath = $matches[1] ?? null;
             }
+            self::overwriteModelFile($modelPath, $data);
         }
 
         /********************************************
@@ -362,6 +364,7 @@ class ScaffoldResource extends Resource
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
             $resourcePath = $matches[1] ?? null;
+            self::overwriteResourceFile($resourcePath, $data);
         }
 
         /********************************************
@@ -377,48 +380,50 @@ class ScaffoldResource extends Resource
             $output = Artisan::output();
             preg_match('/\[([^\]]+)\]/', $output, $matches);
             $controllerPath = $matches[1] ?? null;
+            self::overwriteControllerFile($controllerPath, $data);
         }
 
         /********************************************
          * POLICY FILE (For Permissions)
          */
-        if ($data['Create Policy']) {
-            $modelName = self::getFileName($data['Model']);
-            Artisan::call('make:policy', [
-                'name' => $modelName . 'Policy',
-                '--model' => $modelName,
-                '--no-interaction' => true,
-            ]);
-            $output = Artisan::output();
-            if (strpos($output, 'Policy') !== false) {
-                preg_match('/\[([^\]]+)\]/', $output, $matches);
-                $policyPath = $matches[1] ?? null;
-                if ($policyPath) {
-                    self::updatePolicyFile($policyPath, $modelName);
-                    // Log::info("Policy file created and updated at: $policyPath");
-                    /********************************************
-                     * SUCCESS NOTIFICATION
-                     */
-                    Notification::make()
-                        ->success()
-                        ->persistent()
-                        ->title('Scaffold with Policy Created Successfully!')
-                        ->body('A new policy file has been successfully created for your model. Please configure the permissions for the new policy.')
-                        ->icon('heroicon-o-shield-check')
-                        ->actions([
-                            \Filament\Notifications\Actions\Action::make('view')
-                                ->label('Configure Permissions')
-                                ->button()
-                                ->url(\BezhanSalleh\FilamentShield\Resources\RoleResource::getUrl(), shouldOpenInNewTab: true),
-                            \Filament\Notifications\Actions\Action::make('close')
-                                ->color('gray')
-                                ->close(),
-                        ])
-                        ->send();
+        if (class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)) {
+            if ($data['Create Policy']) {
+                $modelName = self::getFileName($data['Model']);
+                Artisan::call('make:policy', [
+                    'name' => $modelName . 'Policy',
+                    '--model' => $modelName,
+                    '--no-interaction' => true,
+                ]);
+                $output = Artisan::output();
+                if (strpos($output, 'Policy') !== false) {
+                    preg_match('/\[([^\]]+)\]/', $output, $matches);
+                    $policyPath = $matches[1] ?? null;
+                    if ($policyPath) {
+                        self::updatePolicyFile($policyPath, $modelName);
+                        // Log::info("Policy file created and updated at: $policyPath");
+                        /********************************************
+                         * SUCCESS NOTIFICATION
+                         */
+                        Notification::make()
+                            ->success()
+                            ->persistent()
+                            ->title('Scaffold with Policy Created Successfully!')
+                            ->body('A new policy file has been successfully created for your model. Please configure the permissions for the new policy.')
+                            ->icon('heroicon-o-shield-check')
+                            ->actions([
+                                \Filament\Notifications\Actions\Action::make('view')
+                                    ->label('Configure Permissions')
+                                    ->button()
+                                    ->url(\BezhanSalleh\FilamentShield\Resources\RoleResource::getUrl(), shouldOpenInNewTab: true),
+                                \Filament\Notifications\Actions\Action::make('close')
+                                    ->color('gray')
+                                    ->close(),
+                            ])
+                            ->send();
+                    }
                 }
             }
         }
-
 
         /********************************************
          * EXECUTE THE CREATING OF ROUTE
@@ -428,11 +433,6 @@ class ScaffoldResource extends Resource
             $controllerName = self::getFileName($controllerPath);
             self::addRoutes($data, $controllerName);
         }
-
-        self::overwriteResourceFile($resourcePath, $data);
-        self::overwriteMigrationFile($migrationPath, $data);
-        self::overwriteModelFile($modelPath, $data);
-        self::overwriteControllerFile($controllerPath, $data);
 
         /********************************************
          * AFTER FILE/DB GENERATION, RUN THIS ARTISAN COMMANDS:
