@@ -2,11 +2,11 @@
 
 namespace Solutionforest\FilamentScaffold\Resources\ScaffoldResource\Pages;
 
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\HtmlString;
 use Solutionforest\FilamentScaffold\Models\Scaffold;
 use Solutionforest\FilamentScaffold\Resources\ScaffoldResource;
-use Filament\Notifications\Notification;
-use Illuminate\Support\HtmlString;
 
 class CreateScaffold extends CreateRecord
 {
@@ -34,12 +34,12 @@ class CreateScaffold extends CreateRecord
         return \Filament\Actions\Action::make('create')
             ->label('Create Scaffold')
             ->requiresConfirmation()
-                ->modalHeading('Confirm Scaffold Creation')
-                ->modalDescription(new HtmlString("Ensure all scaffold components (resource name, table name, etc.) are set and their creation <b>won't be interrupted</b>.<br><br>Are you ready to create the scaffold?"))
-                ->modalSubmitActionLabel('Yes, Confirm')
-                ->modalCancelActionLabel('No, Cancel')
-                ->modalIcon('heroicon-o-exclamation-triangle')
-                ->modalIconColor('warning')
+            ->modalHeading('Confirm Scaffold Creation')
+            ->modalDescription(new HtmlString("Ensure all scaffold components (resource name, table name, etc.) are set and their creation <b>won't be interrupted</b>.<br><br>Are you ready to create the scaffold?"))
+            ->modalSubmitActionLabel('Yes, Confirm')
+            ->modalCancelActionLabel('No, Cancel')
+            ->modalIcon('heroicon-o-exclamation-triangle')
+            ->modalIconColor('warning')
             ->action(fn () => $this->create())
             ->keyBindings(['mod+s']);
     }
@@ -48,5 +48,4 @@ class CreateScaffold extends CreateRecord
     {
         return null;
     }
-
 }
