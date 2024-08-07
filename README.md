@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/filament-scaffold.svg?style=flat-square)](https://packagist.org/packages/solution-forest/filament-scaffold)
 
 ## Description
-Filament scaffold is a toolkiit for Filament Admin that simplifies the generation of resources. It can automatically generate madels, resources, migration files, and more, creating corresponding forms and table views based on the database table. Filament scaffold aims to speed up development and reduce the time spent writing repetitive code.
+Filament scaffold is a toolkiit for Filament Admin that simplifies the generation of resources. It can automatically generate models, resources, migration files, and more, creating corresponding forms and table views based on the database table. Filament scaffold aims to speed up development and reduce the time spent writing repetitive code.
 
 ## Features
 - Automatic Filament Resource Generation: Generates Filament resource files, including forms and table views, based on specified table names.
