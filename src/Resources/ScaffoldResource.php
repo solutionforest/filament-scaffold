@@ -69,7 +69,13 @@ class ScaffoldResource extends Resource
                                     ->options(self::getAllTableNames())
                                     ->reactive()
                                     ->afterStateUpdated(function (Set $set, $state) {
-                                        $tableName = self::getAllTableNames()[$state];
+                                        $allTables = self::getAllTableNames();
+
+                                        if (! isset($allTables[$state])) {
+                                            return;
+                                        }
+
+                                        $tableName = $allTables[$state];
                                         $tableColumns = self::getTableColumns($tableName);
                                         $modelName = str_replace('_', '', ucwords($tableName, '_'));
                                         $set('Table Name', $tableName);
