@@ -286,7 +286,8 @@ class ScaffoldResource extends Resource
 
     public static function getFileName($path)
     {
-        $fileNameWithExtension = basename($path);
+        $normalizedPath = str_replace('\\', '/', $path);
+        $fileNameWithExtension = basename($normalizedPath);
         $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
 
         return $fileName;
