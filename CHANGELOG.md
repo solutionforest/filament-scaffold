@@ -2,6 +2,21 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 0.0.7 - 2024-08-13
+
+### What's Changed
+
+* Update README.md by @pranab-acharya in https://github.com/solutionforest/filament-scaffold/pull/3
+* Fix undefined array key by @joy2fun in https://github.com/solutionforest/filament-scaffold/pull/4
+* Fix windows or linux basename path issue
+
+### New Contributors
+
+* @pranab-acharya made their first contribution in https://github.com/solutionforest/filament-scaffold/pull/3
+* @joy2fun made their first contribution in https://github.com/solutionforest/filament-scaffold/pull/4
+
+**Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.6...0.0.7
+
 ## 0.0.6 - 2024-08-02
 
 ### What's Changed
