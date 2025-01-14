@@ -2,6 +2,18 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 0.0.8 - 2025-01-14
+
+### What's Changed
+
+* Model form should singular by @hazbu in https://github.com/solutionforest/filament-scaffold/pull/5
+
+### New Contributors
+
+* @hazbu made their first contribution in https://github.com/solutionforest/filament-scaffold/pull/5
+
+**Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.7...0.0.8
+
 ## 0.0.7 - 2024-08-13
 
 ### What's Changed
