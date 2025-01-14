@@ -461,9 +461,9 @@ class ScaffoldResource extends Resource
         foreach ($commands as $command) {
             $fullCommand = "php artisan $command";
             $descriptorspec = [
-                0 => ['pipe', 'r'], //stdin
-                1 => ['pipe', 'w'], //stdout
-                2 => ['pipe', 'w'],  //stderr
+                0 => ['pipe', 'r'], // stdin
+                1 => ['pipe', 'w'], // stdout
+                2 => ['pipe', 'w'],  // stderr
             ];
 
             $process = proc_open($fullCommand, $descriptorspec, $pipes, base_path());
