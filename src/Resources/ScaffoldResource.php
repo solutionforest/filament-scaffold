@@ -58,7 +58,7 @@ class ScaffoldResource extends Resource
                                     ->reactive()
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(function (Set $set, $state) {
-                                        $modelName = Str::singular(str_replace('_', '', ucwords($tableName, '_')));
+                                        $modelName = str_replace('_', '', ucwords($state, '_'));
                                         $set('Model', 'app\\Models\\' . $modelName);
                                         $set('Resource', 'app\\Filament\\Resources\\' . $modelName . 'Resource');
                                         $set('Choose Table', $state);
@@ -77,7 +77,7 @@ class ScaffoldResource extends Resource
 
                                         $tableName = $allTables[$state];
                                         $tableColumns = self::getTableColumns($tableName);
-                                        $modelName = str_replace('_', '', ucwords($tableName, '_'));
+                                        $modelName = Str::singular(str_replace('_', '', ucwords($tableName, '_')));
                                         $set('Table Name', $tableName);
                                         $set('Model', 'app\\Models\\' . $modelName);
                                         $set('Resource', 'app\\Filament\\Resources\\' . $modelName . 'Resource');
