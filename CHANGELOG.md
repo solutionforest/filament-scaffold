@@ -2,6 +2,14 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 0.0.9 - 2025-01-23
+
+### What's Changed
+
+* Fix previous singular form by @hazbu in https://github.com/solutionforest/filament-scaffold/pull/6
+
+**Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.8...0.0.9
+
 ## 0.0.8 - 2025-01-14
 
 ### What's Changed
