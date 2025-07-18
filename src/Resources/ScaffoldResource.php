@@ -117,12 +117,10 @@ class ScaffoldResource extends Resource
                         Forms\Components\Checkbox::make('Create Policy')
                             ->default(false)
                             ->hidden(fn () => ! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
-                        Forms\Components\Checkbox::make('Create API')
+                        Forms\Components\Checkbox::make('create_api')
                             ->label('Create API')
                             ->default(false)
                             ->hidden(fn () => !class_exists(\Rupadana\ApiService\ApiService::class)),
-                        
-                        //
 
                     ])
                     ->columns(2)
@@ -497,7 +495,7 @@ class ScaffoldResource extends Resource
         /********************************************
          * Create API with https://github.com/rupadana/filament-api-service IF installed
          */
-        if ($data['Create API'] && class_exists(\Rupadana\ApiService\ApiService::class)) {
+        if ($data['create_api'] && class_exists(\Rupadana\ApiService\ApiService::class)) {
             $resourcePath = $data['Resource'] ?? null;
 
             if ($resourcePath) {
