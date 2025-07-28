@@ -2,6 +2,18 @@
 
 All notable changes to `filament-scaffold` will be documented in this file.
 
+## 0.0.10 - 2025-07-28
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot[bot] in https://github.com/solutionforest/filament-scaffold/pull/7
+* Bump aglipanci/laravel-pint-action from 2.4 to 2.5 by @dependabot[bot] in https://github.com/solutionforest/filament-scaffold/pull/8
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot[bot] in https://github.com/solutionforest/filament-scaffold/pull/9
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/solutionforest/filament-scaffold/pull/10
+* New Feature by emmanpbarrameda - 071625 by @emmanpbarrameda in https://github.com/solutionforest/filament-scaffold/pull/11
+
+**Full Changelog**: https://github.com/solutionforest/filament-scaffold/compare/0.0.9...0.0.10
+
 ## 0.0.9 - 2025-01-23
 
 ### What's Changed
