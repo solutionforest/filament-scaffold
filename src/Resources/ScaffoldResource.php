@@ -120,7 +120,7 @@ class ScaffoldResource extends Resource
                         Forms\Components\Checkbox::make('create_api')
                             ->label('Create API')
                             ->default(false)
-                            ->hidden(fn () => !class_exists(\Rupadana\ApiService\ApiService::class)),
+                            ->hidden(fn () => ! class_exists(\Rupadana\ApiService\ApiService::class)),
 
                     ])
                     ->columns(2)
@@ -491,7 +491,6 @@ class ScaffoldResource extends Resource
             }
         }
 
-
         /**
          * Creates an API using the filament-api-service package if it is installed.
          * See: https://github.com/rupadana/filament-api-service
@@ -507,10 +506,10 @@ class ScaffoldResource extends Resource
 
                 if (class_exists($resourceClass)) {
                     try {
-                        //default panel ID to skip interactive prompt
+                        // default panel ID to skip interactive prompt
                         $defaultPanelId = \Filament\Facades\Filament::getDefaultPanel()->getId();
 
-                        //API service generator
+                        // API service generator
                         Artisan::call('make:filament-api-service', [
                             'resource' => $apiServiceName,
                             '--panel' => $defaultPanelId,
@@ -527,8 +526,8 @@ class ScaffoldResource extends Resource
                                     API service has been generated for: <b>{$resourceClassName}</b><br><br>
                                     Generated files location:<br>
                                     <b>app/Filament/Resources/{$resourceClassName}/Api</b><br><br>
-                                    <small><pre>" . e($output) . "</pre></small>
-                                "))
+                                    <small><pre>" . e($output) . '</pre></small>
+                                '))
                                 ->icon('heroicon-o-code-bracket')
                                 ->send();
                         } else {
@@ -538,8 +537,8 @@ class ScaffoldResource extends Resource
                                 ->title('API Service Generation Issue')
                                 ->body(new \Illuminate\Support\HtmlString("
                                     There was an issue generating the API service for: <b>{$resourceClassName}</b><br><br>
-                                    <small><pre>" . e($output) . "</pre></small>
-                                "))
+                                    <small><pre>" . e($output) . '</pre></small>
+                                '))
                                 ->icon('heroicon-o-exclamation-triangle')
                                 ->send();
                         }
@@ -547,7 +546,7 @@ class ScaffoldResource extends Resource
                         Notification::make()
                             ->danger()
                             ->title('API Service Generation Failed')
-                            ->body("Unexpected error: " . $e->getMessage())
+                            ->body('Unexpected error: ' . $e->getMessage())
                             ->send();
                     }
                 } else {
@@ -565,7 +564,6 @@ class ScaffoldResource extends Resource
                     ->send();
             }
         }
-
 
         if (empty($commandErrors)) {
 
