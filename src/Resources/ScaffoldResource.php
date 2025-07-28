@@ -492,8 +492,9 @@ class ScaffoldResource extends Resource
         }
 
 
-        /********************************************
-         * Create API with https://github.com/rupadana/filament-api-service IF installed
+        /**
+         * Creates an API using the filament-api-service package if it is installed.
+         * See: https://github.com/rupadana/filament-api-service
          */
         if ($data['create_api'] && class_exists(\Rupadana\ApiService\ApiService::class)) {
             $resourcePath = $data['Resource'] ?? null;
