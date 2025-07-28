@@ -117,6 +117,11 @@ class ScaffoldResource extends Resource
                         Forms\Components\Checkbox::make('Create Policy')
                             ->default(false)
                             ->hidden(fn () => ! class_exists(\BezhanSalleh\FilamentShield\FilamentShield::class)),
+                        Forms\Components\Checkbox::make('create_api')
+                            ->label('Create API')
+                            ->default(false)
+                            ->hidden(fn () => !class_exists(\Rupadana\ApiService\ApiService::class)),
+
                     ])
                     ->columns(2)
                     ->columnSpan(1),
@@ -485,6 +490,82 @@ class ScaffoldResource extends Resource
                 }
             }
         }
+
+
+        /**
+         * Creates an API using the filament-api-service package if it is installed.
+         * See: https://github.com/rupadana/filament-api-service
+         */
+        if ($data['create_api'] && class_exists(\Rupadana\ApiService\ApiService::class)) {
+            $resourcePath = $data['Resource'] ?? null;
+
+            if ($resourcePath) {
+                $resourceClass = str_replace(['/', '\\'], '\\', $resourcePath);
+                $resourceClass = preg_replace('/^app\\\\/i', 'App\\', $resourceClass);
+                $resourceClassName = class_basename($resourceClass);
+                $apiServiceName = str_replace('Resource', '', $resourceClassName);
+
+                if (class_exists($resourceClass)) {
+                    try {
+                        //default panel ID to skip interactive prompt
+                        $defaultPanelId = \Filament\Facades\Filament::getDefaultPanel()->getId();
+
+                        //API service generator
+                        Artisan::call('make:filament-api-service', [
+                            'resource' => $apiServiceName,
+                            '--panel' => $defaultPanelId,
+                            '--no-interaction' => true,
+                        ]);
+                        $output = Artisan::output();
+
+                        if (str_contains($output, 'created') || str_contains($output, 'generated')) {
+                            Notification::make()
+                                ->success()
+                                ->persistent()
+                                ->title('API Service Created Successfully!')
+                                ->body(new \Illuminate\Support\HtmlString("
+                                    API service has been generated for: <b>{$resourceClassName}</b><br><br>
+                                    Generated files location:<br>
+                                    <b>app/Filament/Resources/{$resourceClassName}/Api</b><br><br>
+                                    <small><pre>" . e($output) . "</pre></small>
+                                "))
+                                ->icon('heroicon-o-code-bracket')
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->warning()
+                                ->persistent()
+                                ->title('API Service Generation Issue')
+                                ->body(new \Illuminate\Support\HtmlString("
+                                    There was an issue generating the API service for: <b>{$resourceClassName}</b><br><br>
+                                    <small><pre>" . e($output) . "</pre></small>
+                                "))
+                                ->icon('heroicon-o-exclamation-triangle')
+                                ->send();
+                        }
+                    } catch (\Throwable $e) {
+                        Notification::make()
+                            ->danger()
+                            ->title('API Service Generation Failed')
+                            ->body("Unexpected error: " . $e->getMessage())
+                            ->send();
+                    }
+                } else {
+                    Notification::make()
+                        ->danger()
+                        ->title('Resource Class Not Found')
+                        ->body("The class `{$resourceClass}` does not exist. Please generate the resource first.")
+                        ->send();
+                }
+            } else {
+                Notification::make()
+                    ->danger()
+                    ->title('Missing Resource Input')
+                    ->body('The Resource input is required to generate the API service.')
+                    ->send();
+            }
+        }
+
 
         if (empty($commandErrors)) {
 
